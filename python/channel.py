@@ -12,14 +12,14 @@
 ###################################################################
 
 
-
-
 class channel:
-	def __init__(self, _name, _midiChannel, _arduinoID):
+	def __init__(self, _name, _midiChannel, _arduinoID, _recordButton):
 		self.name = _name
 		self.midiChannel = _midiChannel
+		self.recordButton = _recordButton
 		self.arduinoID = _arduinoID
 		self.currentValue = 63
+		self.isModified = True
 		#Recording
 		self.isRecording = False
 		self.isPlaying = False
@@ -34,34 +34,42 @@ class channel:
 	def setValue(self, newVal):
 		if(newVal>0 and newVal<127):
 			self.currentValue = newVal
+			self.isModified = True
 
 	def update( self):
-		if isRecording :
-			list_of_value.append(self.currentValue)
+		if self.isRecording :
+			self.list_of_value.append(self.currentValue)
 
 		if self.isPlaying :
 			self.currentIndex+=1
-			if(self.currentIndex >= len(self.list_of_value):
+			if self.currentIndex >= len(self.list_of_value):
 				self.currentIndex = 0
 			return self.list_of_value[self.currentIndex]
 		else :
-			return self.currentValue
+			if self.isModified :
+				self.isModified = False
+				return self.currentValue
+			else :
+				return None
+
 			
 	def playStop( self, isPlay ):
-		if isPlay and len(self.list_of_value)>0 :
+		if self.isPlay and len(self.list_of_value)>0 :
 			self.currentIndex = 0
 			self.isPlaying = True
 			print self.name+" play "
-		else
+		else :
 			self.isPlaying = False
 			print self.name+" stop"
 
 	def startRecording( self):
-		del list_of_value[:]
+		del self.list_of_value[:]
+		self.isPlaying = False
 		self.isRecording = True
 
 	def stopRecording (self):
 		self.isRecording = False
+		self.isPlaying =True
 
 
 
