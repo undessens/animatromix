@@ -18,11 +18,30 @@ from video_effect import video_effect
 #en fonction du mode en question.
 # Il est possible d'avoir un mode "vide" pour bouger les potars sans que rien de soit affecte
 
-list_of_motor= []
+
+##########################################
+#Todo . Si on en enregistre mais que l'on 
+# ne bouge pas les potars, peut on considerer que cest un stop
+#
+#
+
+
 
 def receive_midi_msg(msg):
 	#print msg
-	for c in list_of_motor:
+	for c in list_of_all['motor']:
+		if (c.midiChannel == msg.control):
+			c.setValue(msg.value)
+			c.printResult()
+		if (c.recordButton == msg.control):
+			if( msg.value):
+				print ( c.name+" : record")
+				c.startRecording()
+			else :
+				print ( c.name+" : stop record")
+				c.stopRecording()
+
+	for c in list_of_all['led']:
 		if (c.midiChannel == msg.control):
 			c.setValue(msg.value)
 			c.printResult()
@@ -57,15 +76,22 @@ def send_serial(val, id):
 
 def main():
 	#channel listing
-	
+	global list_of_motor
+	list_of_motor= []
 	list_of_motor.append( channel( "servomoteur2", 17, 4, 33) )
 	list_of_motor.append( channel( "servomoteur1", 16, 7, 32) )
-	list_of_motor.append( channel( "channel4", 36, 4, 0) )
+	#list_of_motor.append( channel( "channel4", 36, 4, 0) )
+	global list_of_leds
 	list_of_leds = []
-	list_of_leds.append( channel( "ledSide1", 18, 13, 0))
-	list_of_leds.append( channel( "ledSide2", 12, 34, 0))
+	list_of_leds.append( channel( "ledRouge", 0, 2, 64))
+	list_of_leds.append( channel( "ledRGBr", 1, 10, 65))
+	list_of_leds.append( channel( "ledRGBg", 2, 11, 66))
+	list_of_leds.append( channel( "ledRGBb", 3, 12, 67))
+	#list_of_leds.append( channel( "ledSide2", 12, 34, 0))
+	global list_of_videoFx 
 	list_of_videoFx = []
 	list_of_videoFx.append ( video_effect("Constrate", 13 , "/video/constrate", 12, 255))
+	global list_of_all 
 	list_of_all = dict()
 	list_of_all['motor'] = list_of_motor
 	list_of_all['led'] = list_of_leds
@@ -109,8 +135,10 @@ def main():
 		#Main update
 		#Frequency update 20Hz
 		time.sleep(0.05)
-		for c in list_of_motor:
-			v = update_channel(c)
+		for c in list_of_all['motor']:
+			update_channel(c)
+		for c in list_of_all['led']:
+			update_channel(c)
 
 
 
