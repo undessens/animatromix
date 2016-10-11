@@ -5,7 +5,7 @@
 #include "ofxRPiCameraVideoGrabber.h"
 #include "ImageFilterCollection.h"
 
-class CameraDemo
+class CameraSettings
 {
 public:
     
@@ -27,5 +27,5 @@ public:
     }
     virtual void update()=0;
     virtual void draw()=0;
-    virtual void onKey(int key)=0;
+    virtual void onOsc(string adress, int value)=0;
 };

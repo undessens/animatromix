@@ -1,8 +1,8 @@
 #pragma once
-#include "CameraDemo.h"
+#include "CameraSettings.h"
 
 
-class DemoWhiteBalance  : public CameraDemo
+class SettingsWhiteBalance  : public CameraSettings
 {
     
 public:
@@ -37,33 +37,12 @@ public:
             videoGrabber->setWhiteBalance(GetWhiteBalance(whiteBalanceNames[currentWhiteBalanceIndex]));
             doChangeWhiteBalance = false;
         }
-        if(doEvCompensation)
-        {
-            int ev = videoGrabber->getEvCompensation();
-            
-            if(ev+1 <= 4)
-            {
-                ev++;
-            }else
-            {
-                ev = -4;
-            }
-            videoGrabber->setEvCompensation(ev);
-            doEvCompensation = false;
-        }
-        if(doChangeFlickerCancellation)
-        {
 
-            videoGrabber->setFlickerCancellation(!videoGrabber->isFlickerCancellationEnabled());
-            doChangeFlickerCancellation = false;
-        }
-        
         stringstream info;
         
         info << "\n";
         info << "Press 1 to Change White Balance: "     << videoGrabber->getWhiteBalance()      <<  "\n";
-        info << "Press 2 to Change EV Compensation: "   << videoGrabber->getEvCompensation()    <<  "\n";
-        info << "Press 3 to Toggle Flicker Cancellation: " << videoGrabber->isFlickerCancellationEnabled()      <<  "\n";        
+     
 
         infoString = info.str();
         

@@ -1,8 +1,8 @@
 #pragma once
-#include "CameraDemo.h"
+#include "CameraSettings.h"
 
 
-class DemoZoomCrop  : public CameraDemo
+class SettingsZoomCrop  : public CameraSettings
 {
     
 public:
@@ -36,29 +36,6 @@ public:
             resetCrop = false;
         }
         
-        if (doCrop) 
-        {
-            
-            int randomPercentage = ofRandom(25, 100);
-            videoGrabber->setSensorCrop(0, 0,  randomPercentage, randomPercentage);
-            doCrop = false;
-        }
-        
-        if(doZoomIn)
-        {
-            videoGrabber->zoomIn();
-            doZoomIn = false;
-        }
-        if(doZoomOut)
-        {
-            videoGrabber->zoomOut();
-            doZoomOut = false;
-        }
-        if (doRandomZoom) 
-        {
-            doRandomZoom = false;
-            videoGrabber->setZoomLevelNormalized(ofRandom(0.0, 1.0f));
-        }
         
         if(resetZoom)
         {

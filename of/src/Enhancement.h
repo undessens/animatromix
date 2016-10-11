@@ -1,8 +1,8 @@
 #pragma once
-#include "CameraDemo.h"
+#include "CameraSettings.h"
 
 
-class DemoEnhancement  : public CameraDemo
+class SettingsEnhancement  : public CameraSettings
 {
     
 public:
@@ -59,73 +59,7 @@ public:
             
         }
         
-        if (doDRE) 
-        {
-            if (dreLevel+1 <= 3) 
-            {
-                dreLevel++;
-            }else
-            {
-                dreLevel = 0;
-            }
-            ofLogVerbose() << "dreLevel: " << dreLevel;
-            videoGrabber->setDRE(dreLevel);
-            doDRE = false;
-        }
-        
-        if (doSharpness) 
-        {
-            sharpness = videoGrabber->getSharpness();
-            if(sharpness+1 < 100)
-            {
-                sharpness++;
-            }else
-            {
-                sharpness = -100;
-            }
-            videoGrabber->setSharpness(sharpness);
-        }
-        if(doContrast)
-        {
-            contrast = videoGrabber->getContrast();
-            if(contrast+1 < 100)
-            {
-                contrast++;
-            }else
-            {
-                contrast = -100;
-            }
-            videoGrabber->setContrast(contrast);
-            
-        }
-        
-        
-        if(doBrightness)
-        {                
-            brightness = videoGrabber->getBrightness();
-            if(brightness+1 < 100)
-            {
-                brightness++;
-            }else
-            {
-                brightness = 0;
-            }
-            videoGrabber->setBrightness(brightness);
-        }
-        
-        
-        if(doSaturation)
-        {  
-            saturation = videoGrabber->getSaturation();
-            if(saturation+1 < 100)
-            {
-                saturation++;
-            }else
-            {
-                saturation = -100;
-            }
-            videoGrabber->setSaturation(saturation);
-        }
+      
 
         
         stringstream info;

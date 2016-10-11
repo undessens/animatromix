@@ -44,7 +44,11 @@ class channel:
 			self.currentIndex+=1
 			if self.currentIndex >= len(self.list_of_value):
 				self.currentIndex = 0
-			return self.list_of_value[self.currentIndex]
+			if self.list_of_value[self.currentIndex] != self.currentValue :
+				self.currentValue = self.list_of_value[self.currentIndex]
+				return self.currentValue
+			else :
+				return None
 		else :
 			if self.isModified :
 				self.isModified = False

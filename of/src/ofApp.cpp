@@ -20,40 +20,32 @@ void ofApp::setup()
     //pass in the settings and it will start the camera
 
     videoGrabber.setup(omxCameraSettings);
-    int demoCount = 0;
+    int settingsCount = 0;
    
-    DemoEnhancement* enhancementDemo = new DemoEnhancement();
+    SettingsEnhancement* enhancement= new SettingsEnhancement();
     enhancementDemo->setup(&videoGrabber);
-    enhancementDemo->name = "IMAGE ENHANCEMENT";
-    demos[demoCount] = enhancementDemo;
-    demoCount++;
-    
-    DemoZoomCrop* zoomCropDemo = new DemoZoomCrop();
-    zoomCropDemo->setup(&videoGrabber);
-    zoomCropDemo->name = "ZOOM/CROP";
-    demos[demoCount] = zoomCropDemo;
-    demoCount++;
-    
+    enhancementDemo->name = "enhancement";
+    listOfSettings[settingsCount] = enhancement;
+    settingsCount++;
 
-    
+    SettingsZoomCrop* zoomCrop= new SettingsZoomCrop();
+    zoomCrop->setup(&videoGrabber);
+    zoomCrop->name = "zoomCrop";
+    listOfSettings[settingsCount] = zoomCrop;
+    settingsCount++;
 
-    
-    DemoFilters* filterDemo = new DemoFilters();
-    filterDemo->setup(&videoGrabber);
-    filterDemo->name = "FILTERS";
-    demos[demoCount] = filterDemo;
-    demoCount++;   
+    SettingsFilters* filters = new SettingsFilters();
+    filters->setup(&videoGrabber);
+    filters->name = "filters";
+    listOfSettings[settingsCount] = filters;
+    settingsCount++;
 
-    DemoWhiteBalance*  wbDemo = new DemoWhiteBalance();
-    wbDemo->setup(&videoGrabber);
-    wbDemo->name = "WHITE BALANCE";
-    demos[demoCount] = wbDemo;
-    demoCount++;
+    SettingsWhiteBalance* whiteBalance = new SettingsWhiteBalance();
+    whiteBalance->setup(&videoGrabber);
+    whiteBalance->name = "enhancement";
+    listOfSettings[settingsCount] = whiteBalance;
+    settingsCount++;
     
-    
-    doNextDemo = false;
-    currentDemoID =0;
-    currentDemo = demos[currentDemoID];
 }
 
 
@@ -61,23 +53,40 @@ void ofApp::setup()
 void ofApp::update()
 {
 
-    
-    if (doNextDemo)
-    {
-        if((unsigned int) currentDemoID+1 < demos.size())
-        {
-            currentDemoID++;
-        }else
-        {
-            currentDemoID = 0;
-        }
-        currentDemo = demos[currentDemoID];
-        doNextDemo = false;
-        doPrintInfo = true;
-    }else
-    {
-        currentDemo->update();
-    }
+	while(receiver.hasWaitingMessages()){
+		// get the next message
+		ofxOscMessage m;
+		receiver.getNextMessage(m);
+		int value = m.getArgAsInt32(0);
+		string add0= ofSplitString(m.getAdress(), " ")[0];
+	    string add1= ofSplitString(m.getAdress(), " ")[1];
+	    ofLogVerbose() << "\n OSC message arrived";
+
+		for (int i=0; i<NB_SETTINGS; i++){
+
+			if( add0 = (listOfSettings[i]].name)){
+				ofLogVerbose() << "\n OSC sttings:" << add0 << " - " << add1;
+
+				//ROUTE osc message according the type of settings
+				// Then transmit the adress and value to the specific setting class
+				(listOfSettings[i]).onOSC(add1, value);
+
+				//Finally update the class to apply new settings
+				(listOfSettings[i]).update();				
+
+
+			}
+
+
+	    }
+			
+		
+
+	}
+	string firstWord= ofSplitString(theTweet, " ")[0];  
+		}
+
+ 
     
 }
 
@@ -127,18 +136,7 @@ void ofApp::draw()
             doPrintInfo = false;
         }
     }
-    ofColor circleColor;
-    if (videoGrabber.isRecording()) 
-    {
-        circleColor = ofColor::green;
-    }else
-    {
-        circleColor = ofColor::red;
-    }
-    ofPushStyle();
-        ofSetColor(circleColor, 90);
-        ofDrawCircle(ofPoint(ofGetWidth() - 200, 40), 20);
-    ofPopStyle();
+
 }
 
 //--------------------------------------------------------------

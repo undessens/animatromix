@@ -1,8 +1,8 @@
 #pragma once
-#include "CameraDemo.h"
+#include "CameraSettings.h"
 
 
-class DemoFilters  : public CameraDemo
+class SettingsFilters  : public CameraSettings
 {
     
 public:

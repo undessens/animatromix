@@ -78,8 +78,10 @@ def main():
 	#channel listing
 	global list_of_motor
 	list_of_motor= []
-	list_of_motor.append( channel( "servomoteur2", 17, 4, 33) )
-	list_of_motor.append( channel( "servomoteur1", 16, 7, 32) )
+	list_of_motor.append( channel( "servomoteur2", 17, 4 , 33) )
+	list_of_motor.append( channel( "servomoteur1", 16, 7 , 32) )
+	list_of_motor.append( channel( "motor DC",     18, 13, 34) )
+	list_of_motor.append( channel( "stepper motor",19, 14, 35) )
 	#list_of_motor.append( channel( "channel4", 36, 4, 0) )
 	global list_of_leds
 	list_of_leds = []
