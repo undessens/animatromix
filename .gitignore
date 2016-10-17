@@ -1,0 +1,3 @@
+*.pyc
+of/bin/**
+of/obj/**
