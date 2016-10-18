@@ -12,7 +12,10 @@ void ofApp::setup()
     //allows keys to be entered via terminal remotely (ssh)
     consoleListener.setup(this);
 
+    // OSC			
+    receiver.setup(12345);
     
+    // OMX camera settings
     omxCameraSettings.width = 1280;
     omxCameraSettings.height = 720;
     omxCameraSettings.framerate = 30;
@@ -58,14 +61,14 @@ void ofApp::update()
 		ofxOscMessage m;
 		receiver.getNextMessage(m);
 		int value = m.getArgAsInt32(0);
-		string add0= ofSplitString(m.getAddress(), " ")[0];
-	    string add1= ofSplitString(m.getAddress(), " ")[1];
-	    ofLogVerbose() << "\n OSC message arrived";
+		string add0= ofSplitString(m.getAddress(), "/")[0];
+	    string add1= ofSplitString(m.getAddress(), "/")[1];
+	    
 
 		for (int i=0; i<NB_SETTINGS; i++){
-
+			
 			if( add0 == (listOfSettings[i]->name)){
-				ofLogVerbose() << "\n OSC settings:" << add0 << " - " << add1;
+				ofLogVerbose() << "\n OSC settings:" << add0 << " - " << add1 << " : " << ofToString(value);
 
 				//ROUTE osc message according the type of settings
 				// Then transmit the adress and value to the specific setting class
@@ -100,9 +103,11 @@ void ofApp::draw()
         videoGrabber.draw();
         
         //draw a smaller version via the getTextureReference() method
-        int drawWidth = videoGrabber.getWidth()/4;
+        /*
+	int drawWidth = videoGrabber.getWidth()/4;
         int drawHeight = videoGrabber.getHeight()/4;
         videoGrabber.getTextureReference().draw(videoGrabber.getWidth()-drawWidth, videoGrabber.getHeight()-drawHeight, drawWidth, drawHeight);
+        */    
     }
     
     if (doDrawInfo || doPrintInfo) 
