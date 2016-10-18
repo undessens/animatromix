@@ -80,7 +80,7 @@ public:
 
         infoString = info.str();
    
-    };
+    }
     
     void draw()
     {
@@ -91,11 +91,26 @@ public:
     {
         if (address == "contrast")
         {
-             videoGrabber->setContrast(ofMap(value, 0, 127, -100, 100);
+             int newContrast = int(ofMap(value, 0, 127, -100, 100));
+	     videoGrabber->setContrast(newContrast);
+	     ofLogVerbose() << "\ngrabber contrast changed : " << ofToString(newContrast);
         }
+        if (address == "sharpness")
+        {
+             int newSharp = int(ofMap(value, 0, 127, -100, 100));
+	     videoGrabber->setSharpness(newSharp);
+	     ofLogVerbose() << "\ngrabber sharpness changed : " << ofToString(newSharp);
+        }
+        if (address == "saturation")
+        {
+             int newSat = int(ofMap(value, 0, 127, -100, 100));
+	     videoGrabber->setSaturation(newSat);
+	     ofLogVerbose() << "\ngrabber saturation changed : " << ofToString(newSat);
+        }
+
         
         
 
         
-    };
+    }
 };
