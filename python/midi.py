@@ -88,11 +88,14 @@ def send_serial(val, id):
 	if(ser):
 		ser.write(msg)
 
-def send_osc(adress, value):
+def send_osc(address, value):
 	oscMsg = OSCMessage()
-	oscMsg.setAddress(adress)
-	oscMsg.append(value)
-	oscClient.send(oscMsg)
+	oscMsg.setAddress(address)
+	oscMsg.append(int(value))
+	try:
+		oscClient.send(oscMsg)
+	except Exception, e:
+		print e
 
 def main():
 	#channel listing
@@ -112,9 +115,9 @@ def main():
 	#list_of_leds.append( channel( "ledSide2", 12, 34, 0))
 	global list_of_videoFx 
 	list_of_videoFx = []
-	list_of_videoFx.append ( video_effect("sharpness", 13 , "/enhancement/sharpness"))
-	list_of_videoFx.append ( video_effect("Constrate", 14 , "/enhancement/constrat"))
-	list_of_videoFx.append ( video_effect("Saturation", 15 , "/enhancement/saturation"))
+	list_of_videoFx.append ( video_effect("sharpness", 5 , "enhancement/sharpness"))
+	list_of_videoFx.append ( video_effect("Constrate", 4 , "enhancement/contrast"))
+	list_of_videoFx.append ( video_effect("Saturation", 6, "enhancement/saturation"))
 	global list_of_all 
 	list_of_all = dict()
 	list_of_all['motor'] = list_of_motor
@@ -124,8 +127,9 @@ def main():
 	currentMode = "motor"
 
 	# OSC connect
-	global oscClient = OSCClient()
-	oscClient.connect( ("localhost",12345 ))
+	global oscClient
+	oscClient = OSCClient()
+	oscClient.connect( ("192.168.0.20",12345 ))
 
 	
 	# Midi connect						
@@ -168,6 +172,7 @@ def main():
 		for c in list_of_all['led']:
 			update_channel(c)
 		for c in list_of_all['videoFx']:
+			update_videoFx(c)
 
 
 
