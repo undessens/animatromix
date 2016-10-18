@@ -72,7 +72,8 @@ def changeMode( newMode):
 def send_serial(val, id):
 	msg = ""
 	msg = str(chr(id))+str(chr(val))
-	ser.write(msg)
+	if(ser):
+		ser.write(msg)
 
 def main():
 	#channel listing
@@ -115,7 +116,8 @@ def main():
 		print "Impossible to connect to Midi device"
 		inport = None	
 
-	inport.callback = receive_midi_msg
+	if(inport):
+		inport.callback = receive_midi_msg
 
 	#Serial connect
 	try:
