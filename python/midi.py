@@ -6,6 +6,7 @@ import glob
 import time
 from channel import channel
 from video_effect import video_effect
+from OSC import OSCClient, OSCMessage
 
 ########################################
 # 3 differenciation importante : motor, led, video
@@ -53,11 +54,23 @@ def receive_midi_msg(msg):
 				print ( c.name+" : stop record")
 				c.stopRecording()
 
+	for c in list_of_all['videoFx']:
+		if (c.midiChannel == msg.control):
+			c.setValue(msg.value)
+			c.printResult()
+
+
 def update_channel( channel):
 	result = channel.update()
 	if result != None  :
 		print result
 		send_serial(result, channel.arduinoID)
+
+def update_videoFx( vidFx):
+	result = vidFx.update()
+	if result != None :
+		print result
+		send_osc ( vidFx.oscAddress, result)
 
 def changeMode( newMode):
 	if(newMode =="motor") :
@@ -74,6 +87,12 @@ def send_serial(val, id):
 	msg = str(chr(id))+str(chr(val))
 	if(ser):
 		ser.write(msg)
+
+def send_osc(adress, value):
+	oscMsg = OSCMessage()
+	oscMsg.setAddress(adress)
+	oscMsg.append(value)
+	oscClient.send(oscMsg)
 
 def main():
 	#channel listing
@@ -93,7 +112,9 @@ def main():
 	#list_of_leds.append( channel( "ledSide2", 12, 34, 0))
 	global list_of_videoFx 
 	list_of_videoFx = []
-	list_of_videoFx.append ( video_effect("Constrate", 13 , "/video/constrate", 12, 255))
+	list_of_videoFx.append ( video_effect("sharpness", 13 , "/enhancement/sharpness"))
+	list_of_videoFx.append ( video_effect("Constrate", 14 , "/enhancement/constrat"))
+	list_of_videoFx.append ( video_effect("Saturation", 15 , "/enhancement/saturation"))
 	global list_of_all 
 	list_of_all = dict()
 	list_of_all['motor'] = list_of_motor
@@ -102,7 +123,10 @@ def main():
 	# currentMode, "motor" or "led" or "videoFx"
 	currentMode = "motor"
 
-	#channel
+	# OSC connect
+	global oscClient = OSCClient()
+	oscClient.connect( ("localhost",12345 ))
+
 	
 	# Midi connect						
 	try:
@@ -143,6 +167,8 @@ def main():
 			update_channel(c)
 		for c in list_of_all['led']:
 			update_channel(c)
+		for c in list_of_all['videoFx']:
+
 
 
 

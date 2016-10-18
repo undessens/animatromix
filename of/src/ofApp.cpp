@@ -65,7 +65,7 @@ void ofApp::update()
 		for (int i=0; i<NB_SETTINGS; i++){
 
 			if( add0 == (listOfSettings[i]->name)){
-				ofLogVerbose() << "\n OSC sttings:" << add0 << " - " << add1;
+				ofLogVerbose() << "\n OSC settings:" << add0 << " - " << add1;
 
 				//ROUTE osc message according the type of settings
 				// Then transmit the adress and value to the specific setting class

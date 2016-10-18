@@ -87,34 +87,14 @@ public:
         
     }
     
-    void onOsc(string address, int key)
+    void onOsc(string address, int value)
     {
-        if (key == '1')
+        if (address == "contrast")
         {
-            doSharpness = !doSharpness;
+             videoGrabber->setContrast(ofMap(value, 0, 127, -100, 100);
         }
         
-        if (key == '2')
-        {
-            doContrast = !doContrast;
-        }
         
-        if (key == '3')
-        {
-            doBrightness = !doBrightness;
-        }
-        if (key == '4')
-        {
-            doSaturation = !doSaturation;
-        }
-        if (key == '5')
-        {
-            doDRE = true;
-        }
-        if (key == '0')
-        {
-            doValueReset = true;
-        }
 
         
     };
