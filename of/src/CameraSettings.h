@@ -14,7 +14,7 @@ public:
     
     string name;
     string infoString;
-    CameraDemo()
+    CameraSettings()
     {
         name = "";
         infoString = "";

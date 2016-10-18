@@ -12,7 +12,7 @@
 #include "Filters.h"
 #include "WhiteBalance.h"
 
-#define NB_SETTINGS(4)
+#define NB_SETTINGS 4
 
 class ofApp : public ofBaseApp, public KeyListener{
     
@@ -29,7 +29,7 @@ public:
     OMXCameraSettings omxCameraSettings;
     ofxRPiCameraVideoGrabber videoGrabber;
     
-    listOfSettings = CameraSettings[NB_SETTINGS]
+    CameraSettings* listOfSettings[NB_SETTINGS];
     ofxOscReceiver receiver;
 
     bool doDrawInfo;

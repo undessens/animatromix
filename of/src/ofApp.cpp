@@ -23,8 +23,8 @@ void ofApp::setup()
     int settingsCount = 0;
    
     SettingsEnhancement* enhancement= new SettingsEnhancement();
-    enhancementDemo->setup(&videoGrabber);
-    enhancementDemo->name = "enhancement";
+    enhancement->setup(&videoGrabber);
+    enhancement->name = "enhancement";
     listOfSettings[settingsCount] = enhancement;
     settingsCount++;
 
@@ -58,33 +58,33 @@ void ofApp::update()
 		ofxOscMessage m;
 		receiver.getNextMessage(m);
 		int value = m.getArgAsInt32(0);
-		string add0= ofSplitString(m.getAdress(), " ")[0];
-	    string add1= ofSplitString(m.getAdress(), " ")[1];
+		string add0= ofSplitString(m.getAddress(), " ")[0];
+	    string add1= ofSplitString(m.getAddress(), " ")[1];
 	    ofLogVerbose() << "\n OSC message arrived";
 
 		for (int i=0; i<NB_SETTINGS; i++){
 
-			if( add0 = (listOfSettings[i]].name)){
+			if( add0 == (listOfSettings[i]->name)){
 				ofLogVerbose() << "\n OSC sttings:" << add0 << " - " << add1;
 
 				//ROUTE osc message according the type of settings
 				// Then transmit the adress and value to the specific setting class
-				(listOfSettings[i]).onOSC(add1, value);
+				(listOfSettings[i])->onOsc(add1, value);
 
 				//Finally update the class to apply new settings
-				(listOfSettings[i]).update();				
+				(listOfSettings[i])->update();				
 
 
 			}
 
 
-	    }
+	    	}
 			
 		
 
-	}
-	string firstWord= ofSplitString(theTweet, " ")[0];  
-		}
+	 }
+	
+		
 
  
     
@@ -112,9 +112,6 @@ void ofApp::draw()
         info << "App FPS: " << ofGetFrameRate() << endl;
         info << "CAMERA RESOLUTION: "   << videoGrabber.getWidth() << "x" << videoGrabber.getHeight()	<< " @ "<< videoGrabber.getFrameRate() <<"FPS"<< endl;
         info << endl;
-        info << "DEMO: " << currentDemo->name << endl;
-        info << endl;
-        info << currentDemo->infoString;
         info << endl;
         info << "Press SPACE for next Demo" << endl;
         info << "Press r to reset camera settings" << endl;
@@ -145,11 +142,7 @@ void ofApp::keyPressed  (int key)
     ofLog(OF_LOG_VERBOSE, "%c keyPressed", key);
     switch (key) 
     {
-        case ' ':
-        {
-            doNextDemo = true;
-            break;
-        }
+        
         case 'd':
         {
             doDrawInfo = !doDrawInfo;
@@ -182,7 +175,6 @@ void ofApp::keyPressed  (int key)
         }
         default:
         {
-            currentDemo->onKey(key);
             break;
         }
             

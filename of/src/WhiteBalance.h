@@ -14,7 +14,7 @@ public:
     vector<string> whiteBalanceNames;
     void setup(ofxRPiCameraVideoGrabber* videoGrabber_)
     {
-        CameraDemo::setup( videoGrabber_);
+        CameraSettings::setup( videoGrabber_);
         doChangeWhiteBalance = false;
         doEvCompensation = false;
         doChangeFlickerCancellation = false;        
@@ -57,7 +57,7 @@ public:
         
     };
     
-    void onKey(int key)
+    void onOsc(string address, int key)
     {
         switch (key)
         {

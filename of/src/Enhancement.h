@@ -27,7 +27,7 @@ public:
     
     void setup(ofxRPiCameraVideoGrabber* videoGrabber_)
     {
-        CameraDemo::setup( videoGrabber_);
+        CameraSettings::setup( videoGrabber_);
         doSharpness = false;
         doContrast = false;
         doBrightness = false;
@@ -87,7 +87,7 @@ public:
         
     }
     
-    void onKey(int key)
+    void onOsc(string address, int key)
     {
         if (key == '1')
         {
