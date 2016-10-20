@@ -8,8 +8,6 @@ class SettingsWhiteBalance  : public CameraSettings
 public:
     
     bool doChangeWhiteBalance;
-    bool doEvCompensation;
-    bool doChangeFlickerCancellation;
     size_t currentWhiteBalanceIndex;
     vector<string> whiteBalanceNames;
     void setup(ofxRPiCameraVideoGrabber* videoGrabber_)
@@ -24,64 +22,28 @@ public:
     
     void update()
     {
+      
+    }
 
-        if(doChangeWhiteBalance)
-        {
-            if(currentWhiteBalanceIndex+1 < whiteBalanceNames.size())
-            {
-                currentWhiteBalanceIndex++;
-            }else
-            {
-                currentWhiteBalanceIndex = 0;
-            }
-            videoGrabber->setWhiteBalance(GetWhiteBalance(whiteBalanceNames[currentWhiteBalanceIndex]));
-            doChangeWhiteBalance = false;
-        }
-
-        stringstream info;
-        
-        info << "\n";
-        info << "Press 1 to Change White Balance: "     << videoGrabber->getWhiteBalance()      <<  "\n";
-     
-
-        infoString = info.str();
-        
-    };
-    
-    void draw()
+    void reset()
     {
-        
-        
-        
-        
-        
-    };
+        currentWhiteBalanceIndex = 0;
+        videoGrabber->setWhiteBalance(GetWhiteBalance(whiteBalanceNames[currentWhiteBalanceIndex]));
+    }
+
     
     void onOsc(string address, int key)
     {
-        switch (key)
-        {
-                
-            case '1':
-            {
-                doChangeWhiteBalance = true;
-                break;
-            }
-            case '2':
-            {
-                doEvCompensation = true;
-                break;
-            }
-            case '3':
-            {
-                 doChangeFlickerCancellation = true;
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
-        
-    };
+        //Example How to change white balance
+        // if(currentWhiteBalanceIndex+1 < whiteBalanceNames.size())
+        //     {
+        //         currentWhiteBalanceIndex++;
+        //     }else
+        //     {
+        //         currentWhiteBalanceIndex = 0;
+        //     }
+        //     videoGrabber->setWhiteBalance(GetWhiteBalance(whiteBalanceNames[currentWhiteBalanceIndex]));
+        //     doChangeWhiteBalance = false
+
+    }
 };
