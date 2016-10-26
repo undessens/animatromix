@@ -26,6 +26,7 @@ public:
         videoGrabber = videoGrabber_;
     }
     virtual void update()=0;
-    virtual void draw()=0;
+    virtual void reset()=0;
     virtual void onOsc(string adress, int value)=0;
+    
 };
