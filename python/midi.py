@@ -130,6 +130,13 @@ def main():
 	list_of_videoFx.append ( video_effect("sharpness", 5 , "enhancement/sharpness"))
 	list_of_videoFx.append ( video_effect("Constrate", 4 , "enhancement/contrast"))
 	list_of_videoFx.append ( video_effect("Saturation", 6, "enhancement/saturation"))
+	list_of_videoFx.append ( video_effect("Brightness", 7, "enhancement/brightness"))
+	list_of_videoFx.append ( video_effect("Filter +", 62, "filters/nextFilter"))
+	list_of_videoFx.append ( video_effect("Filter -", 61, "filters/previousFilter"))
+	list_of_videoFx.append ( video_effect("init Filter", 60, "filters/initFilter"))
+	list_of_videoFx.append ( video_effect("zoom", 21, "zoomCrop/topMargin"))
+	list_of_videoFx.append ( video_effect("zoom", 22, "zoomCrop/leftMargin"))
+	list_of_videoFx.append ( video_effect("zoom", 23, "zoomCrop/zoomLevel"))
 	global list_of_transport
 	list_of_transport = []
 	list_of_transport.append( transport_effect("release Stepper", 42, 21))

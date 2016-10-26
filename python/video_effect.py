@@ -12,7 +12,7 @@ class video_effect:
 		print self.name + " : "+str(self.currentValue)
 
 	def setValue(self, newVal):
-		if(newVal>0 and newVal<127):
+		if(newVal>=0 and newVal <= 127):
 			self.currentValue = newVal
 			self.isModified = True
 

@@ -39,37 +39,49 @@ public:
     
     void onOsc(string address, int value)
     {
-        if (address == "filterNum")
+        if (address == "initFilter" && value > 63)
         {
 
-                if(key>0 && key<listOfFilter.size())
+                    currentFilter = 0;
+		    string name = "";
+                    name = listOfFilter[currentFilter];
+                    videoGrabber->setImageFilter(name);
+		    ofLogVerbose() << "\nInitFilter ";
+
+            
+        }
+
+	if (address == "filterNum")
+        {
+
+                if(value>0 && value<listOfFilter.size())
                 {
                     string name = "";
-                    name = listOfFilter[value];
+                    name = listOfFilter[0];
                     videoGrabber->setImageFilter(name);
-                    currentFilter = key;
+                    currentFilter = value;
                 }
             
         }
 
-        if ( address== "nextFilter")
+        if ( address== "nextFilter" && value > 63)
         {
             currentFilter++;
             if(currentFilter >= listOfFilter.size()) currentFilter = 0;
-            string name = listOfFilter[value];
+            string name = listOfFilter[currentFilter];
             videoGrabber->setImageFilter(name);
-            currentFilter = key;
+            ofLogVerbose() << "\nNextFilter " << name;
 
         }
 
 
-        if ( address== "previousFilter")
+        if ( address== "previousFilter" && value > 63)
         {
             currentFilter--;
             if(currentFilter < 0) currentFilter = ( listOfFilter.size() - 1 );
-            string name = listOfFilter[value];
+            string name = listOfFilter[currentFilter];
             videoGrabber->setImageFilter(name);
-            currentFilter = key;
+	    ofLogVerbose() << "\n PrevFilter " << name;
 
         }
         

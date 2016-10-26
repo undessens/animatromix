@@ -13,9 +13,7 @@ public:
     void setup(ofxRPiCameraVideoGrabber* videoGrabber_)
     {
         CameraSettings::setup( videoGrabber_);
-        doChangeWhiteBalance = false;
-        doEvCompensation = false;
-        doChangeFlickerCancellation = false;        
+        doChangeWhiteBalance = false; 
         currentWhiteBalanceIndex = 0;
         whiteBalanceNames = OMX_Maps::getInstance().getWhiteBalanceNames();
     };

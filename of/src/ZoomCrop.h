@@ -8,59 +8,52 @@ class SettingsZoomCrop  : public CameraSettings
 public:
     
     
-    bool doCrop;
-    bool resetCrop;
-    
-    bool doZoomIn;
-    bool doZoomOut;
-    bool doRandomZoom;
-    bool resetZoom;
+    int marginWidth;
+    int marginHeight;
+    int zoomValue;
     void setup(ofxRPiCameraVideoGrabber* videoGrabber_)
     {
         CameraSettings::setup( videoGrabber_);
+	marginWidth = 0;
+        marginHeight= 0;
+        zoomValue = 100;
+
        
-    };
+    }
     
     void update()
     {
 
             //videoGrabber->zoomIn();
             //videoGrabber->zoomOut();
-    };
+	    //videoGrabber->setSensorCrop(0, 0,  randomPercentage, randomPercentage);
+    }
     
     void reset()
     {
         videoGrabber->setZoomLevelNormalized(0);
-    };
+    }
     
-    void onOsc(string address, int key)
+    void onOsc(string address, int value)
     {      
-        if (key == '1')
+        if (address == "zoomLevel")
         {
-            doCrop = !doCrop;
-        }
-        if (key == '2')
-        {
-            resetCrop = true;
-        }
-        if (key == '3') 
-        {
-            doZoomIn = true;
-        }
-        
-        if (key == '4') 
-        {
-            doZoomOut = true;
-        }
-        
-        if (key == '5') 
-        {
-            doRandomZoom = true;
-        }
-        
-        if (key == '6') 
-        {
-            resetZoom = true;
-        }
-    };
+            	zoomValue = 100 - (value/127.0) * 100;
+		videoGrabber->setSensorCrop(marginWidth, marginHeight,  zoomValue, zoomValue);
+	}
+
+	if(address == "leftMargin")
+	{
+  		marginWidth = (value/127.0) * 100;
+		videoGrabber->setSensorCrop(marginWidth, marginHeight,  zoomValue, zoomValue);
+	}
+
+		if(address == "topMargin")
+	{
+  		marginHeight = (value/127.0) * 100;
+		videoGrabber->setSensorCrop(marginWidth, marginHeight,  zoomValue, zoomValue);
+	}
+
+    }
+
 };
