@@ -6,10 +6,11 @@ import glob
 import time
 from channel import channel
 from video_effect import video_effect
+from transport_effect import transport_effect
 from OSC import OSCClient, OSCMessage
 
 ########################################
-# 3 differenciation importante : motor, led, video
+# 3 differenciation importante : motor, led, video, et commande arduino
 # motor, led et video sont controlle par le meme controlleur midi
 # mais depuis des "modes" differents ...
 # led et motor sont controlles depuis des "channel", il est donc possible
@@ -59,17 +60,28 @@ def receive_midi_msg(msg):
 			c.setValue(msg.value)
 			c.printResult()
 
+	for c in list_of_all['transport']:
+		if (c.midiChannel == msg.control):
+			c.setValue(msg.value)
+			c.printResult()
+
 
 def update_channel( channel):
 	result = channel.update()
 	if result != None  :
-		print result
+		#print result
 		send_serial(result, channel.arduinoID)
+
+def update_transport( transp):
+	result = transp.update()
+	if result :
+		#print result
+		send_serial(100, transp.arduinoID)
 
 def update_videoFx( vidFx):
 	result = vidFx.update()
 	if result != None :
-		print result
+		#print result
 		send_osc ( vidFx.oscAddress, result)
 
 def changeMode( newMode):
@@ -103,8 +115,8 @@ def main():
 	list_of_motor= []
 	list_of_motor.append( channel( "servomoteur2", 17, 4 , 33) )
 	list_of_motor.append( channel( "servomoteur1", 16, 7 , 32) )
-	list_of_motor.append( channel( "motor DC",     18, 13, 34) )
-	list_of_motor.append( channel( "stepper motor",19, 14, 35) )
+	list_of_motor.append( channel( "stepper motor1",18, 13, 34) )
+	list_of_motor.append( channel( "stepper motor2",19, 14, 35) )
 	#list_of_motor.append( channel( "channel4", 36, 4, 0) )
 	global list_of_leds
 	list_of_leds = []
@@ -118,18 +130,25 @@ def main():
 	list_of_videoFx.append ( video_effect("sharpness", 5 , "enhancement/sharpness"))
 	list_of_videoFx.append ( video_effect("Constrate", 4 , "enhancement/contrast"))
 	list_of_videoFx.append ( video_effect("Saturation", 6, "enhancement/saturation"))
+	global list_of_transport
+	list_of_transport = []
+	list_of_transport.append( transport_effect("release Stepper", 42, 21))
+	list_of_transport.append( transport_effect("hold Stepper", 41, 20))
+	list_of_transport.append( transport_effect("init stepper pos", 43, 22))
 	global list_of_all 
 	list_of_all = dict()
 	list_of_all['motor'] = list_of_motor
 	list_of_all['led'] = list_of_leds
 	list_of_all['videoFx'] = list_of_videoFx
+	list_of_all['transport'] = list_of_transport
+	# TODO delete current mode, not used anymore
 	# currentMode, "motor" or "led" or "videoFx"
 	currentMode = "motor"
 
 	# OSC connect
 	global oscClient
 	oscClient = OSCClient()
-	oscClient.connect( ("192.168.0.20",12345 ))
+	oscClient.connect( ("localhost",12345 ))
 
 	
 	# Midi connect						
@@ -154,8 +173,13 @@ def main():
 			ser = serial.Serial('/dev/tty.usbmodem1a151',115200)
 			print "Serial connected"
 		elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
-			#ser = serial.Serial('/dev/ttyACM0',115200)
-			ser = serial.Serial('/dev/ttyACM1', 115200)
+			try:
+				ser = serial.Serial('/dev/ttyACM0',115200)
+				print "ACM0"
+			except :
+				ser = serial.Serial('/dev/ttyACM1', 115200)
+				print "ACM1"
+			
 		else:
 			ser = None
 	except :
@@ -173,6 +197,8 @@ def main():
 			update_channel(c)
 		for c in list_of_all['videoFx']:
 			update_videoFx(c)
+		for c in list_of_all['transport']:
+			update_transport(c)
 
 
 
