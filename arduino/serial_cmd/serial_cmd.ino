@@ -84,9 +84,9 @@ int servo2pin = 2;
 //Led strip
 int rubLed1pin = 4;
 //Led RGB
-int ledRGBrpin = 9;
-int ledRGBgpin = 10;
-int ledRGBbpin = 11;
+int ledRGBrpin = 3;
+int ledRGBgpin = 5;
+int ledRGBbpin = 6;
 int val;
 
 void setup(){
