@@ -8,7 +8,7 @@ Animatromix:
  
  */
 
-//#include <Servo.h> 
+#include <Servo.h> 
 #include <AccelStepper.h>
 #include <Wire.h>
 #include <Adafruit_MotorShield.h>
@@ -18,10 +18,7 @@ Animatromix:
 #define NB_STEP 400
 
 /* TODO 
-TRANSPORT : hold and release stepper
 Refactor + info
-
- 
  */
 
 
@@ -78,15 +75,15 @@ void initStepperPos(){
 }
 
 //Servomotor
-//Servo myservo1, myservo2;
-int servo1pin = 3;
-int servo2pin = 2;
+Servo myservo1, myservo2;
+int servo1pin = 9;
+int servo2pin = 10;
 //Led strip
 int rubLed1pin = 4;
 //Led RGB
-int ledRGBrpin = 9;
-int ledRGBgpin = 10;
-int ledRGBbpin = 11;
+int ledRGBrpin = 3;
+int ledRGBgpin = 5;
+int ledRGBbpin = 6;
 int val;
 
 void setup(){
@@ -104,8 +101,8 @@ void setup(){
   stepperPos1 = 0;
   stepperPos2 = 0;
 
-  //myservo1.attach(servo1pin);
-  //myservo2.attach(servo2pin);
+  myservo1.attach(servo1pin);
+  myservo2.attach(servo2pin);
   pinMode(rubLed1pin, OUTPUT );
   pinMode(ledRGBrpin, OUTPUT );
   pinMode(ledRGBgpin, OUTPUT ); 
@@ -124,10 +121,10 @@ void loop(){
 
     switch(id){
     case 7:
-      //myServo1.write(map(val, 0 , 127, 0, 180));
+      myServo1.write(map(val, 0 , 127, 0, 180));
       break;
     case 4:
-      //myServo2.write(map(val, 0 , 127, 0, 180));
+      myServo2.write(map(val, 0 , 127, 0, 180));
       break;
     case 2:
       analogWrite(rubLed1pin, map(val, 1, 127, 0, 255));

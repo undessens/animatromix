@@ -29,31 +29,22 @@ from OSC import OSCClient, OSCMessage
 
 
 
+
+
 def receive_midi_msg(msg):
+	global is_recording
+	#global is_playing
+
 	#print msg
 	for c in list_of_all['motor']:
 		if (c.midiChannel == msg.control):
 			c.setValue(msg.value)
 			c.printResult()
-		if (c.recordButton == msg.control):
-			if( msg.value):
-				print ( c.name+" : record")
-				c.startRecording()
-			else :
-				print ( c.name+" : stop record")
-				c.stopRecording()
 
 	for c in list_of_all['led']:
 		if (c.midiChannel == msg.control):
 			c.setValue(msg.value)
 			c.printResult()
-		if (c.recordButton == msg.control):
-			if( msg.value):
-				print ( c.name+" : record")
-				c.startRecording()
-			else :
-				print ( c.name+" : stop record")
-				c.stopRecording()
 
 	for c in list_of_all['videoFx']:
 		if (c.midiChannel == msg.control):
@@ -64,6 +55,52 @@ def receive_midi_msg(msg):
 		if (c.midiChannel == msg.control):
 			c.setValue(msg.value)
 			c.printResult()
+
+	#record button
+	if msg.control == 45 and msg.value>0:
+		
+		print is_recording
+		if not(is_recording):
+			start_recording_all()
+			if is_playing:
+				print "record overdub"
+				#overdud
+				send_osc("transport/overdub", 1)
+			else :
+				print "record only"
+				#only recording
+				send_osc("transport/recording", 1)
+
+
+
+	#play button
+	if msg.control == 41 and msg.value>0:
+		print "play button"
+		print is_recording
+		if not is_playing :
+			send_osc("transport/play", 1)
+
+			if is_recording :
+				print "play but is recording"
+				stop_recording_all()
+				play_all()
+			else :
+				print "play already recorded"
+				play_all()
+		if is_playing and is_recording:
+			#end of overdubbing
+			print "end overdubbing"
+			stop_recording_all()
+
+
+	#stop button
+	if msg.control == 42 and msg.value>0:
+		print "stop button"
+		send_osc("transport/stop", 1)
+		if is_playing and not(is_recording):
+			stop_all()
+		if is_recording :
+			stop_recording_all()
 
 
 def update_channel( channel):
@@ -84,15 +121,6 @@ def update_videoFx( vidFx):
 		#print result
 		send_osc ( vidFx.oscAddress, result)
 
-def changeMode( newMode):
-	if(newMode =="motor") :
-		currentMode = "motor"
-	elif(newMode == "led") :
-		currentMode = "led"
-	elif(newMode == "videoFx"):
-		currentMode = "videoFx"
-	else :
-		print "wrong mode choosen"
 
 def send_serial(val, id):
 	msg = ""
@@ -109,7 +137,51 @@ def send_osc(address, value):
 	except Exception, e:
 		print e
 
+def start_recording_all():
+	global is_recording 
+
+	print "record all"
+	is_recording = True
+
+	for c in list_of_all['motor']:
+			c.startRecording()
+	for c in list_of_all['led']:
+			c.startRecording()
+
+
+def stop_recording_all():
+	global is_recording
+	
+	print "stop recording all"
+	is_recording = False
+	for c in list_of_all['motor']:
+			c.stopRecording()
+	for c in list_of_all['led']:
+			c.stopRecording()
+
+def play_all():
+	global is_playing
+	print "play all"
+	is_playing = True
+	for c in list_of_all['motor']:
+			c.playStop(True)
+	for c in list_of_all['led']:
+			c.playStop(True)
+
+def stop_all():
+	global is_playing
+	print "stop all"
+	is_playing = False
+	for c in list_of_all['motor']:
+			c.playStop(False)
+	for c in list_of_all['led']:
+			c.playStop(False)
+
+
+
+
 def main():
+	
 	#channel listing
 	global list_of_motor
 	list_of_motor= []
@@ -118,6 +190,7 @@ def main():
 	list_of_motor.append( channel( "stepper motor1",18, 13, 34) )
 	list_of_motor.append( channel( "stepper motor2",19, 14, 35) )
 	#list_of_motor.append( channel( "channel4", 36, 4, 0) )
+	
 	global list_of_leds
 	list_of_leds = []
 	list_of_leds.append( channel( "ledRouge", 0, 2, 64))
@@ -125,6 +198,7 @@ def main():
 	list_of_leds.append( channel( "ledRGBg", 2, 11, 66))
 	list_of_leds.append( channel( "ledRGBb", 3, 12, 67))
 	#list_of_leds.append( channel( "ledSide2", 12, 34, 0))
+	
 	global list_of_videoFx 
 	list_of_videoFx = []
 	list_of_videoFx.append ( video_effect("sharpness", 5 , "enhancement/sharpness"))
@@ -137,20 +211,27 @@ def main():
 	list_of_videoFx.append ( video_effect("zoom", 21, "zoomCrop/topMargin"))
 	list_of_videoFx.append ( video_effect("zoom", 22, "zoomCrop/leftMargin"))
 	list_of_videoFx.append ( video_effect("zoom", 23, "zoomCrop/zoomLevel"))
+	
 	global list_of_transport
 	list_of_transport = []
 	list_of_transport.append( transport_effect("release Stepper", 42, 21))
-	list_of_transport.append( transport_effect("hold Stepper", 41, 20))
-	list_of_transport.append( transport_effect("init stepper pos", 43, 22))
+	#list_of_transport.append( transport_effect("hold Stepper", 41, 20))
+	#list_of_transport.append( transport_effect("init stepper pos", 43, 22))
+	
 	global list_of_all 
 	list_of_all = dict()
 	list_of_all['motor'] = list_of_motor
 	list_of_all['led'] = list_of_leds
 	list_of_all['videoFx'] = list_of_videoFx
 	list_of_all['transport'] = list_of_transport
-	# TODO delete current mode, not used anymore
-	# currentMode, "motor" or "led" or "videoFx"
-	currentMode = "motor"
+
+	#intern transport : record, play , stop , reset
+	global is_recording
+	is_recording = False
+	global is_playing
+	is_playing = False
+
+
 
 	# OSC connect
 	global oscClient
@@ -198,6 +279,7 @@ def main():
 		#Main update
 		#Frequency update 20Hz
 		time.sleep(0.05)
+
 		for c in list_of_all['motor']:
 			update_channel(c)
 		for c in list_of_all['led']:
