@@ -22,7 +22,7 @@ int main()
 #else
     ofSetLogLevel("ofThread", OF_LOG_ERROR);
     ofSetCurrentRenderer(ofGLProgrammableRenderer::TYPE);
-    ofSetupOpenGL(1280, 720, OF_WINDOW);
+    ofSetupOpenGL(1280, 720, OF_FULLSCREEN);
 #endif
 #else
 #ifdef FORCE_PROGRAMMMABLE
@@ -33,7 +33,8 @@ int main()
     ofCreateWindow(glWindowSettings);
 #else
     ofSetLogLevel("ofThread", OF_LOG_ERROR);
-    ofSetupOpenGL(1280, 720, OF_WINDOW);
+    ofSetupOpenGL(1280, 720, OF_FULLSCREEN);
+);
 #endif
     
 #endif

@@ -7,10 +7,13 @@ void ofApp::setup()
     
     ofSetLogLevel(OF_LOG_VERBOSE);
     ofSetLogLevel("ofThread", OF_LOG_ERROR);
-    doDrawInfo = true;    
+    doDrawInfo = false;    
     doPrintInfo = false;
     //allows keys to be entered via terminal remotely (ssh)
     consoleListener.setup(this);
+
+    //Hide mouse
+    ofHideCursor();
 
     // OSC			
     receiver.setup(12345);
