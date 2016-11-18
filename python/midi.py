@@ -34,6 +34,9 @@ from OSC import OSCClient, OSCMessage
 def receive_midi_msg(msg):
 	global is_recording
 	#global is_playing
+	global time_without_midi
+
+	time_without_midi = 0
 
 	#print msg
 	for c in list_of_all['motor']:
@@ -230,6 +233,11 @@ def main():
 	global is_playing
 	is_playing = False
 
+	#Heating security : realase motor after inactivity
+	global time_without_midi
+	time_without_midi = 0
+
+
 
 
 	# OSC connect
@@ -288,6 +296,15 @@ def main():
 			update_videoFx(c)
 		for c in list_of_all['transport']:
 			update_transport(c)
+
+		#Heating security, realese stepper after 5sec of inactivity
+		time_without_midi = time_without_midi+1
+		if(time_without_midi> 100):
+			#release stepper motor
+			send_serial(100, 21)
+			print "Surchauffe"
+			time_without_midi = 0
+
 
 
 
