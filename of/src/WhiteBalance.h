@@ -17,7 +17,7 @@ public:
         currentWhiteBalanceIndex = 0;
         whiteBalanceNames = OMX_Maps::getInstance().getWhiteBalanceNames();
         videoGrabber->setFlickerCancellation(true);
-        videoGrabber->setWhiteBalance("cloudy");
+        videoGrabber->setWhiteBalance("off");
     };
     
     void update()
