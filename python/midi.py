@@ -179,7 +179,6 @@ def stop_all():
 
 
 
-
 def main():
 	
 	#channel listing
@@ -237,6 +236,7 @@ def main():
 	global oscClient
 	oscClient = OSCClient()
 	oscClient.connect( ("localhost",12345 ))
+
 
 	
 	# Midi connect						
