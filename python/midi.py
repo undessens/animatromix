@@ -129,7 +129,10 @@ def send_serial(val, id):
 	msg = ""
 	msg = str(chr(id))+str(chr(val))
 	if(ser):
-		ser.write(msg)
+		try:
+			ser.write(msg)
+		except Exception, e:
+			print e
 
 def send_osc(address, value):
 	oscMsg = OSCMessage()
