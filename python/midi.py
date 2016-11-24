@@ -43,11 +43,17 @@ def receive_midi_msg(msg):
 		if (c.midiChannel == msg.control):
 			c.setValue(msg.value)
 			c.printResult()
+			if( is_recording and not(c.isRecording)):
+				c.playStop(False)
+				c.startRecording()
 
 	for c in list_of_all['led']:
 		if (c.midiChannel == msg.control):
 			c.setValue(msg.value)
 			c.printResult()
+			if( is_recording and not(c.isRecording)):
+				c.playStop(False)
+				c.startRecording()
 
 	for c in list_of_all['videoFx']:
 		if (c.midiChannel == msg.control):
@@ -149,10 +155,10 @@ def start_recording_all():
 	print "record all"
 	is_recording = True
 
-	for c in list_of_all['motor']:
-			c.startRecording()
-	for c in list_of_all['led']:
-			c.startRecording()
+	#Nothing is going to be 
+	#recorded, until its fader, potar 
+	#is moved.
+
 
 
 def stop_recording_all():
@@ -192,8 +198,8 @@ def main():
 	list_of_motor= []
 	list_of_motor.append( channel( "servomoteur2", 17, 4 , 33) )
 	list_of_motor.append( channel( "servomoteur1", 16, 7 , 32) )
-	list_of_motor.append( channel( "stepper motor1",18, 13, 34) )
-	list_of_motor.append( channel( "stepper motor2",19, 14, 35) )
+	list_of_motor.append( channel( "stepper motor1",22, 13, 34) )
+	list_of_motor.append( channel( "stepper motor2",23, 14, 35) )
 	#list_of_motor.append( channel( "channel4", 36, 4, 0) )
 	
 	global list_of_leds
@@ -213,9 +219,9 @@ def main():
 	list_of_videoFx.append ( video_effect("Filter +", 62, "filters/nextFilter"))
 	list_of_videoFx.append ( video_effect("Filter -", 61, "filters/previousFilter"))
 	list_of_videoFx.append ( video_effect("init Filter", 60, "filters/initFilter"))
-	list_of_videoFx.append ( video_effect("zoom", 21, "zoomCrop/topMargin"))
-	list_of_videoFx.append ( video_effect("zoom", 22, "zoomCrop/leftMargin"))
-	list_of_videoFx.append ( video_effect("zoom", 23, "zoomCrop/zoomLevel"))
+	#list_of_videoFx.append ( video_effect("zoom", 21, "zoomCrop/topMargin"))
+	#list_of_videoFx.append ( video_effect("zoom", 22, "zoomCrop/leftMargin"))
+	#list_of_videoFx.append ( video_effect("zoom", 23, "zoomCrop/zoomLevel"))
 	
 	global list_of_transport
 	list_of_transport = []
