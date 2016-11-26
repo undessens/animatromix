@@ -48,7 +48,7 @@ void ofApp::setup()
 
     SettingsWhiteBalance* whiteBalance = new SettingsWhiteBalance();
     whiteBalance->setup(&videoGrabber);
-    whiteBalance->name = "enhancement";
+    whiteBalance->name = "whiteBalance";
     listOfSettings[settingsCount] = whiteBalance;
     settingsCount++;
     
@@ -85,6 +85,9 @@ void ofApp::update()
 
 
 	    	}
+		if( add0 == "transport"){
+			transport = add1;
+		}
 			
 		
 

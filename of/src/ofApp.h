@@ -32,6 +32,8 @@ public:
     CameraSettings* listOfSettings[NB_SETTINGS];
     ofxOscReceiver receiver;
 
+    string transport;
+
     bool doDrawInfo;
     bool doPrintInfo;
 };

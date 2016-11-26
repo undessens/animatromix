@@ -17,7 +17,6 @@ public:
         currentWhiteBalanceIndex = 0;
         whiteBalanceNames = OMX_Maps::getInstance().getWhiteBalanceNames();
         videoGrabber->setFlickerCancellation(true);
-        videoGrabber->setWhiteBalance("Fluorescent");
     };
     
     void update()
@@ -32,18 +31,32 @@ public:
     }
 
     
-    void onOsc(string address, int key)
+    void onOsc(string address, int value)
     {
-        //Example How to change white balance
-        // if(currentWhiteBalanceIndex+1 < whiteBalanceNames.size())
-        //     {
-        //         currentWhiteBalanceIndex++;
-        //     }else
-        //     {
-        //         currentWhiteBalanceIndex = 0;
-        //     }
-        //     videoGrabber->setWhiteBalance(GetWhiteBalance(whiteBalanceNames[currentWhiteBalanceIndex]));
-        //     doChangeWhiteBalance = false
+        if(address == "wbNext" && value > 63)
+	{
+             if(currentWhiteBalanceIndex+1 < whiteBalanceNames.size())
+             {
+                 currentWhiteBalanceIndex++;
+             }
+	     else
+             {
+                 currentWhiteBalanceIndex = 0;
+             }
+             videoGrabber->setWhiteBalance(GetWhiteBalance(whiteBalanceNames[currentWhiteBalanceIndex]));
+         }
+	if(address == "wbPrev" && value > 63 )
+	{
+             if(currentWhiteBalanceIndex > 0)
+             {
+                 currentWhiteBalanceIndex--;
+             }
+	     else
+             {
+                 currentWhiteBalanceIndex = whiteBalanceNames.size()-1;
+             }
+             videoGrabber->setWhiteBalance(GetWhiteBalance(whiteBalanceNames[currentWhiteBalanceIndex]));
+         }
 
     }
 };
