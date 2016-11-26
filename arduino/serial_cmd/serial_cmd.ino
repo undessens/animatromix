@@ -17,10 +17,6 @@ Animatromix:
 // nb_step = 400 according to the INTERLEAVE solution and type of motor
 #define NB_STEP 400
 
-/* TODO 
-Refactor + info
- */
-
 
 //Stepper - adafruit + accstepper
 Adafruit_MotorShield AFMS = Adafruit_MotorShield(); 
@@ -31,6 +27,7 @@ int stepperPos2 = 0;
 int initPos1 = 0;
 int initPos2 = 0;
 
+//Basic function used by AccelStepper library
 void forwardstep1() {  
   myStepper1->onestep(FORWARD, INTERLEAVE);
 }
@@ -45,13 +42,12 @@ void backwardstep2() {
 }
 
 
-
-
-
+//AccelStepper library : allow stepper motion not in a blocking function
 AccelStepper stepper1(forwardstep1, backwardstep1);
 AccelStepper stepper2(forwardstep2, backwardstep2);
 
 
+// Stepper position init : hold, release, init
 void holdStepper(){
  myStepper1->onestep(FORWARD, SINGLE);
  myStepper2->onestep(FORWARD, SINGLE);
@@ -59,6 +55,7 @@ void holdStepper(){
  myStepper2->onestep(BACKWARD, SINGLE);
 }
 
+// Release Stepper and avoid overheating
 void releaseStepper(){
  myStepper1->release();
  myStepper2->release();
@@ -68,16 +65,17 @@ void initStepperPos(){
   
   initPos1 += stepperPos1; 
   initPos2 += stepperPos2;
-  //stepperPos1 = 0;
-  //stepperPos2 = 0;
-  //stepper1.move(stepperPos1-initPos1);
-  //stepper2.move(stepperPos2-initPos2);
+
 }
 
 //Servomotor
-Servo myservo1, myservo2;
-int servo1pin = 9;
-int servo2pin = 10;
+Servo servo1, servo2, servo3, servo4;
+int servo1pin = 7;
+int servo2pin = 8;
+int servo3pin = 9;
+int servo4pin = 10;
+
+
 //Led strip
 int rubLed1pin = 4;
 //Led RGB
@@ -86,10 +84,12 @@ int ledRGBgpin = 5;
 int ledRGBbpin = 6;
 int val;
 
+//--------------------------------------------
+//                   SETUP 
+//--------------------------------------------
 void setup(){
 
-  //Stepper - motor DC
-  //AFMS.begin();
+  //Stepper -  AccelStepper Library
   AFMS.begin(1500);
   stepper1.setMaxSpeed(400.0);
   stepper1.setAcceleration(300.0);
@@ -98,33 +98,51 @@ void setup(){
   stepper2.setMaxSpeed(400.0);
   stepper2.setAcceleration(300.0);
   stepper2.moveTo(0);
+  
+  //Stepper init pos
   stepperPos1 = 0;
   stepperPos2 = 0;
 
-  myservo1.attach(servo1pin);
-  myservo2.attach(servo2pin);
+  //Servo
+  servo1.attach(servo1pin);
+  servo2.attach(servo2pin);
+  servo3.attach(servo3pin);
+  servo4.attach(servo4pin);
+  
+  //Leds
   pinMode(rubLed1pin, OUTPUT );
   pinMode(ledRGBrpin, OUTPUT );
   pinMode(ledRGBgpin, OUTPUT ); 
   pinMode(ledRGBbpin, OUTPUT );
+  
+  //Serial
   Serial.begin(115200);
 
 
 }
-
+//--------------------------------------------------
+//                     LOOP
+//--------------------------------------------------
 void loop(){
 
+  // Serial Reading
   while(Serial.available() >= 2 ){
 
     char id = Serial.read();
     char val = Serial.read();
 
     switch(id){
-    case 7:
-      myServo1.write(map(val, 0 , 127, 0, 180));
-      break;
     case 4:
-      myServo2.write(map(val, 0 , 127, 0, 180));
+      servo1.write(map(val, 0 , 127, 5, 170));
+      break;
+    case 5:
+      servo2.write(map(val, 0 , 127, 5, 170));
+      break;
+    case 6:
+      servo3.write(map(val, 0 , 127, 5, 170));
+      break;
+    case 7:
+      servo4.write(map(val, 0 , 127, 5, 170));
       break;
     case 2:
       analogWrite(rubLed1pin, map(val, 1, 127, 0, 255));
@@ -146,13 +164,13 @@ void loop(){
       stepperPos2 = map(val, 1, 127, 0, NB_STEP);
       stepper2.moveTo((stepperPos2+initPos2));
       break;
-  case 20:
+    case 20:
       holdStepper();
       break;
-  case 21:
+    case 21:
       releaseStepper();
       break;
-  case 22:
+    case 22:
       initStepperPos();
       break;
 
@@ -163,7 +181,6 @@ void loop(){
 
 
   }
-  //end of serial
 
   //Normal Loop
   stepper1.run();

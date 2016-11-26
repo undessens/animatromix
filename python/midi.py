@@ -10,22 +10,35 @@ from transport_effect import transport_effect
 from OSC import OSCClient, OSCMessage
 
 ########################################
-# 3 differenciation importante : motor, led, video, et commande arduino
-# motor, led et video sont controlle par le meme controlleur midi
-# mais depuis des "modes" differents ...
-# led et motor sont controlles depuis des "channel", il est donc possible
-#d'enregistrer et de lire une boucle d'automation.
-# la video est juste controllable.
-#Depuis un meme valeur modifiee depuis le controlleur midi, le veritable control se fera 
-#en fonction du mode en question.
-# Il est possible d'avoir un mode "vide" pour bouger les potars sans que rien de soit affecte
+# 3  types of command/class :
+# .1 Channel :
+#	Control arduino element from midi input, supposed to be analog ( led, motor speed, motor pos)
+#	and able to record play sequence  
+#.2 video effect :
+#	Control video parameter, sending osc message from midi input. Can't be recorder
+#.3 transport effect :
+#	send arduino message, can't be recorder. Supposed to be switch ( On or Off)
+########################################
 
+########################################
+# Korg nano control MEMO
+# potar : 16, to 23
+# fader : 0 to 7
+########################################
 
-##########################################
-#Todo . Si on en enregistre mais que l'on 
-# ne bouge pas les potars, peut on considerer que cest un stop
+#########################################
+# Behavior about recording, playing ...
+#	On record button pressed : is_recording is True
+#							 every "channel" is begin to record
+#							 once you move it. Stop record with stop
+#							 or play. Each recording remove previous recording
+#   On play button pressed : Each channel that has a recorded sequence is going 
+#							 to play. If you move it manually while it is playing,
+#							 then stop .
+#   On Stop button pressed : Stop all recording, and all playing. Release motor
 #
-#
+##########################################""
+
 
 
 
@@ -66,11 +79,11 @@ def receive_midi_msg(msg):
 			c.printResult()
 
 	#record button
-	if msg.control == 45 and msg.value>0:
+	if (msg.control == 45 and msg.value>0 ):
 		
-		print is_recording
 		if not(is_recording):
 			start_recording_all()
+			# do not record, until fader or potar is moved
 			if is_playing:
 				print "record overdub"
 				#overdud
@@ -97,9 +110,9 @@ def receive_midi_msg(msg):
 				print "play already recorded"
 				play_all()
 		if is_playing and is_recording:
-			#end of overdubbing
-			print "end overdubbing"
+			print "play after recording on playing"
 			stop_recording_all()
+			play_all()
 
 
 	#stop button
@@ -110,6 +123,7 @@ def receive_midi_msg(msg):
 			stop_all()
 		if is_recording :
 			stop_recording_all()
+			stop_all()
 
 
 def update_channel( channel):
@@ -150,17 +164,15 @@ def send_osc(address, value):
 		print e
 
 def start_recording_all():
+	#Nothing is going to be 
+	#recorded, until its fader, potar 
+	#is moved.
 	global is_recording 
 
 	print "record all"
 	is_recording = True
 
-	#Nothing is going to be 
-	#recorded, until its fader, potar 
-	#is moved.
-
-
-
+	
 def stop_recording_all():
 	global is_recording
 	
@@ -196,8 +208,10 @@ def main():
 	#channel listing
 	global list_of_motor
 	list_of_motor= []
-	list_of_motor.append( channel( "servomoteur2", 17, 4 , 33) )
-	list_of_motor.append( channel( "servomoteur1", 16, 7 , 32) )
+	list_of_motor.append( channel( "servomoteur1", 16, 4 , 33) )
+	list_of_motor.append( channel( "servomoteur2", 17, 5 , 32) )
+	list_of_motor.append( channel( "servomoteur3", 18, 6 , 33) )
+	list_of_motor.append( channel( "servomoteur4", 19, 7 , 32) )
 	list_of_motor.append( channel( "stepper motor1",22, 13, 34) )
 	list_of_motor.append( channel( "stepper motor2",23, 14, 35) )
 	#list_of_motor.append( channel( "channel4", 36, 4, 0) )
