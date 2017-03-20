@@ -51,7 +51,7 @@ def receive_midi_msg(msg):
 
 	time_without_midi = 0
 
-	#print msg
+	print msg
 	for c in list_of_all['motor']:
 		if (c.midiChannel == msg.control):
 			c.setValue(msg.value)
@@ -233,9 +233,11 @@ def main():
 	list_of_videoFx.append ( video_effect("Filter +", 62, "filters/nextFilter"))
 	list_of_videoFx.append ( video_effect("Filter -", 61, "filters/previousFilter"))
 	list_of_videoFx.append ( video_effect("init Filter", 60, "filters/initFilter"))
-	#list_of_videoFx.append ( video_effect("zoom", 21, "zoomCrop/topMargin"))
-	#list_of_videoFx.append ( video_effect("zoom", 22, "zoomCrop/leftMargin"))
-	#list_of_videoFx.append ( video_effect("zoom", 23, "zoomCrop/zoomLevel"))
+	list_of_videoFx.append ( video_effect("zoom", 20, "zoomCrop/topMargin"))
+	list_of_videoFx.append ( video_effect("zoom", 21, "zoomCrop/leftMargin"))
+	list_of_videoFx.append ( video_effect("zoom", 0, "zoomCrop/zoomLevel"))
+	list_of_videoFx.append ( video_effect("zoom", 59, "whiteBalance/wbNext"))
+	list_of_videoFx.append ( video_effect("zoom", 58, "whiteBalance/wbPrev"))
 	
 	global list_of_transport
 	list_of_transport = []

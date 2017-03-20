@@ -39,18 +39,20 @@ public:
         if (address == "zoomLevel")
         {
             	zoomValue = 100 - (value/127.0) * 100;
+		marginWidth = (value/127.0) * 50 + 1;
+		marginHeight = (value/127.0) * 50 + 1;
 		videoGrabber->setSensorCrop(marginWidth, marginHeight,  zoomValue, zoomValue);
 	}
 
 	if(address == "leftMargin")
 	{
-  		marginWidth = (value/127.0) * 100;
+  		marginWidth = (value/127.0) * 98 + 1;
 		videoGrabber->setSensorCrop(marginWidth, marginHeight,  zoomValue, zoomValue);
 	}
 
 		if(address == "topMargin")
 	{
-  		marginHeight = (value/127.0) * 100;
+  		marginHeight = (value/127.0) * 98 + 1;
 		videoGrabber->setSensorCrop(marginWidth, marginHeight,  zoomValue, zoomValue);
 	}
 

@@ -26,6 +26,8 @@ int stepperPos1 = 0;
 int stepperPos2 = 0;
 int initPos1 = 0;
 int initPos2 = 0;
+int final_speed = 0;
+int final_speed2 = 0;
 
 //Basic function used by AccelStepper library
 void forwardstep1() {  
@@ -75,6 +77,13 @@ int servo2pin = 8;
 int servo3pin = 9;
 int servo4pin = 10;
 
+void releaseServo(){
+ servo1.detach();
+ servo2.detach();
+ servo3.detach();
+ servo4.detach(); 
+  
+}
 
 //Led strip
 int rubLed1pin = 4;
@@ -91,13 +100,15 @@ void setup(){
 
   //Stepper -  AccelStepper Library
   AFMS.begin(1500);
-  stepper1.setMaxSpeed(400.0);
-  stepper1.setAcceleration(300.0);
-  stepper1.moveTo(0);
+  //stepper1.setMaxSpeed(400.0);
+  //stepper1.setAcceleration(300.0);
+  //stepper1.moveTo(0);
+  stepper1.setSpeed( 0.000001);
+  stepper2.setSpeed( 0.000001);
     
-  stepper2.setMaxSpeed(400.0);
-  stepper2.setAcceleration(300.0);
-  stepper2.moveTo(0);
+  //stepper2.setMaxSpeed(400.0);
+  //stepper2.setAcceleration(300.0);
+  //stepper2.moveTo(0);
   
   //Stepper init pos
   stepperPos1 = 0;
@@ -133,16 +144,24 @@ void loop(){
 
     switch(id){
     case 4:
+      servo1.attach(servo1pin);
       servo1.write(map(val, 0 , 127, 5, 170));
+      //servo1.detach();
       break;
     case 5:
+      servo2.attach(servo2pin);
       servo2.write(map(val, 0 , 127, 5, 170));
+      //servo2.detach();
       break;
     case 6:
+      servo3.attach(servo3pin);
       servo3.write(map(val, 0 , 127, 5, 170));
+      //servo3.detach();
       break;
     case 7:
+      servo4.attach(servo4pin);
       servo4.write(map(val, 0 , 127, 5, 170));
+      //servo4.detach();
       break;
     case 2:
       analogWrite(rubLed1pin, map(val, 1, 127, 0, 255));
@@ -157,18 +176,27 @@ void loop(){
       analogWrite(ledRGBbpin, map(val, 1, 127, 0, 255));
       break;
     case 13:
-      stepperPos1 = map(val, 1, 127, 0, NB_STEP);
-      stepper1.moveTo((stepperPos1+initPos1)); 
+      //stepperPos1 = map(val, 1, 127, 0, NB_STEP);
+      //stepperPos1 = map(val, 1, 127, 0, NB_STEP);
+      final_speed = val - 63.5;
+      if( abs(final_speed) < 10 ) stepper1.setSpeed( 0.0001 );
+      else stepper1.setSpeed( final_speed * 3 );
+      //stepper1.moveTo((stepperPos1+initPos1)); 
       break;
     case 14:
-      stepperPos2 = map(val, 1, 127, 0, NB_STEP);
-      stepper2.moveTo((stepperPos2+initPos2));
+      final_speed2 = val - 63.5;
+      if(abs(final_speed2) < 10 ) stepper2.setSpeed( 0.0001 );
+      else stepper2.setSpeed( final_speed2 * 3 );
+      
+      //stepperPos2 = map(val, 1, 127, 0, NB_STEP);
+      //stepper2.moveTo((stepperPos2+initPos2));
       break;
     case 20:
       holdStepper();
       break;
     case 21:
       releaseStepper();
+      releaseServo();
       break;
     case 22:
       initStepperPos();
@@ -183,8 +211,8 @@ void loop(){
   }
 
   //Normal Loop
-  stepper1.run();
-  stepper2.run();
+  stepper1.runSpeed();
+  stepper2.runSpeed();
   
 
 
