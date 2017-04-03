@@ -71,15 +71,17 @@ void initStepperPos(){
 }
 
 //Servomotor
-Servo servo1, servo2, servo3, servo4;
-int servo1pin = 7;
-int servo2pin = 8;
+Servo servo3, servo4;
 int servo3pin = 9;
 int servo4pin = 10;
 
+//Light trough relay
+boolean relay1 = false;
+boolean relay2 = false;
+int relay1pin = 7;
+int relay2pin = 8;
+
 void releaseServo(){
- servo1.detach();
- servo2.detach();
  servo3.detach();
  servo4.detach(); 
   
@@ -115,10 +117,12 @@ void setup(){
   stepperPos2 = 0;
 
   //Servo
-  servo1.attach(servo1pin);
-  servo2.attach(servo2pin);
   servo3.attach(servo3pin);
   servo4.attach(servo4pin);
+
+  //Light trough relay
+  pinMode( relay1pin, OUTPUT );
+  pinMode( relay2pin, OUTPUT );
   
   //Leds
   pinMode(rubLed1pin, OUTPUT );
@@ -144,13 +148,13 @@ void loop(){
 
     switch(id){
     case 4:
-      servo1.attach(servo1pin);
-      servo1.write(map(val, 0 , 127, 5, 170));
+      relay1 = !relay1;
+      digitalWrite(relay1pin, relay1);
       //servo1.detach();
       break;
     case 5:
-      servo2.attach(servo2pin);
-      servo2.write(map(val, 0 , 127, 5, 170));
+      relay2 = !relay2;
+      digitalWrite(relay2pin, relay2);
       //servo2.detach();
       break;
     case 6:
