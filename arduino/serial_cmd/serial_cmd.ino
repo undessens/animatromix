@@ -51,10 +51,10 @@ AccelStepper stepper2(forwardstep2, backwardstep2);
 
 // Stepper position init : hold, release, init
 void holdStepper(){
- myStepper1->onestep(FORWARD, SINGLE);
- myStepper2->onestep(FORWARD, SINGLE);
- myStepper1->onestep(BACKWARD, SINGLE);
- myStepper2->onestep(BACKWARD, SINGLE);
+ myStepper1->onestep(FORWARD,INTERLEAVE );
+ myStepper2->onestep(FORWARD, INTERLEAVE);
+ myStepper1->onestep(BACKWARD, INTERLEAVE);
+ myStepper2->onestep(BACKWARD, INTERLEAVE);
 }
 
 // Release Stepper and avoid overheating

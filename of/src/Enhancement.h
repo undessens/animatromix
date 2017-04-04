@@ -60,7 +60,7 @@ public:
         }
         if (address == "brightness")
         {
-             int newBri = int(ofMap(value, 0, 127, -100, 100));
+             int newBri = int(ofMap(value, 0, 127, 0, 100));
          videoGrabber->setBrightness(newBri);
          ofLogVerbose() << "\ngrabber brightness changed : " << ofToString(newBri);
         }

@@ -99,6 +99,13 @@ class channel:
 		self.isRecording = False
 		self.currentIndex = 0
 
+	def clear(self):
+                self.isRecording = False
+                self.currentIndex = 0
+                self.isPlaying = False
+		del self.list_of_value[:]
+                
+
 
 
 

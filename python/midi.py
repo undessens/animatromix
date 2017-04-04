@@ -125,6 +125,11 @@ def receive_midi_msg(msg):
 			stop_recording_all()
 			stop_all()
 
+	#clear button
+	if msg.control == 46 and msg.value>0:
+                print "clear button"
+                clear_all()
+
 
 def update_channel( channel):
 	result = channel.update()
@@ -201,6 +206,17 @@ def stop_all():
 	for c in list_of_all['led']:
 			c.playStop(False)
 
+def clear_all():
+        global is_playing
+	print "clear all"
+	is_playing = False
+	is_recording = False
+	for c in list_of_all['motor']:
+			c.clear()
+	for c in list_of_all['led']:
+			c.clear()
+        
+
 
 
 def main():
@@ -208,8 +224,6 @@ def main():
 	#channel listing
 	global list_of_motor
 	list_of_motor= []
-	list_of_motor.append( channel( "servomoteur1", 16, 4 , 33) )
-	list_of_motor.append( channel( "servomoteur2", 17, 5 , 32) )
 	list_of_motor.append( channel( "servomoteur3", 18, 6 , 33) )
 	list_of_motor.append( channel( "servomoteur4", 19, 7 , 32) )
 	list_of_motor.append( channel( "stepper motor1",22, 13, 34) )
@@ -242,6 +256,8 @@ def main():
 	global list_of_transport
 	list_of_transport = []
 	list_of_transport.append( transport_effect("release Stepper", 42, 21))
+        list_of_transport.append( transport_effect("relay1", 32, 4))
+        list_of_transport.append( transport_effect("release Stepper", 33, 5))
 	#list_of_transport.append( transport_effect("hold Stepper", 41, 20))
 	#list_of_transport.append( transport_effect("init stepper pos", 43, 22))
 	
